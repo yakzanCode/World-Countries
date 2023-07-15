@@ -1,51 +1,61 @@
-body {
-   font-family: 'Roboto', sans-serif;
-}
+/* Determine the width of the flags column */
+.flags-column {
+    width: 60px;
+  }
   
-h1, h2, h3, h4, h5, h6 {
-   font-family: 'Open Sans', sans-serif;
-}  
-
-td > img {
+  .table {
+    table-layout: fixed;
+    margin-top: 20px;
+  }
+  
+  .table thead th {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .table tbody td {
+    word-break: break-word;
+  }
+  
+  td > img {
     width: 40px;
-}
-
-.offcanvas {
+  }
+  
+  .offcanvas {
     background-color: #f1f1f1;
-}
-
-.offcanvas-body {
+  }
+  
+  .offcanvas-body {
     display: flex;
     flex-direction: column;
     padding: 20px;
-}
-
-.offcanvas-title {
+  }
+  
+  .offcanvas-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
-}
-
-.filter-section,
-.sort-section {
+  }
+  
+  .filter-section,
+  .sort-section {
     margin-bottom: 20px;
-}
-
-.filter-section h6,
-.sort-section h6 {
+  }
+  
+  .filter-section h6,
+  .sort-section h6 {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
-}
-
-.form-check-label {
+  }
+  
+  .form-check-label {
     font-size: 16px;
-}
-
-.sort-section {
+  }
+  
+  .sort-section {
     margin-top: 20px;
-}
-
-.table {
-    margin-top: 20px;
-}
+  }
+  
