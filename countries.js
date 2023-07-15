@@ -7,6 +7,10 @@ function clearData() {
   tbody.innerHTML = "";
 }
 
+function formatPopulation(number) {
+  return number.toLocaleString();
+}
+
 function fillData(data) {
   const tbody = document.getElementById("tBody");
   data.forEach((country, index) => {
@@ -21,7 +25,7 @@ function fillData(data) {
     TD1.appendChild(cImg);
     TD2.innerHTML = country.name.common;
     TD3.innerHTML = country.capital;
-    TD4.innerHTML = country.population;
+    TD4.innerHTML = formatPopulation(country.population);
     TD4.style.color = "rgb(200,0,0)";
 
     if (index % 2 === 0) {
