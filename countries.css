@@ -1,0 +1,51 @@
+body {
+   font-family: 'Roboto', sans-serif;
+}
+  
+h1, h2, h3, h4, h5, h6 {
+   font-family: 'Open Sans', sans-serif;
+}  
+
+td > img {
+    width: 40px;
+}
+
+.offcanvas {
+    background-color: #f1f1f1;
+}
+
+.offcanvas-body {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.offcanvas-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.filter-section,
+.sort-section {
+    margin-bottom: 20px;
+}
+
+.filter-section h6,
+.sort-section h6 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.form-check-label {
+    font-size: 16px;
+}
+
+.sort-section {
+    margin-top: 20px;
+}
+
+.table {
+    margin-top: 20px;
+}
