@@ -1,5 +1,6 @@
 // Global Variables
 let countryData = []; // Store the fetched country data
+let filteredData = []; // Store the filtered country data
 
 // Functions
 function clearData() {
@@ -24,15 +25,15 @@ function fillData(data) {
     cImg.src = country.flags.png;
     TD1.appendChild(cImg);
     TD2.innerHTML = country.name.common;
-    TD3.innerHTML = country.capital;
+    TD3.innerHTML = country.capital || "N/A";
     TD4.innerHTML = formatPopulation(country.population);
-    TD4.style.color = "rgb(200,0,0)";
+    TD4.style.color = "rgb(200, 0, 0)";
 
     if (index % 2 === 0) {
-      TD1.style.backgroundColor = "rgb(211,211,211)";
-      TD2.style.backgroundColor = "rgb(211,211,211)";
-      TD3.style.backgroundColor = "rgb(211,211,211)";
-      TD4.style.backgroundColor = "rgb(211,211,211)";
+      TD1.style.backgroundColor = "rgb(211, 211, 211)";
+      TD2.style.backgroundColor = "rgb(211, 211, 211)";
+      TD3.style.backgroundColor = "rgb(211, 211, 211)";
+      TD4.style.backgroundColor = "rgb(211, 211, 211)";
     }
 
     TR.append(TD1, TD2, TD3, TD4);
@@ -42,15 +43,16 @@ function fillData(data) {
 
 function getCountries() {
   fetch("https://restcountries.com/v3.1/all")
-    .then(response => response.json())
-    .then(json => {
+    .then((response) => response.json())
+    .then((json) => {
       countryData = json; // Save the fetched country data
-      fillData(json);
+      filteredData = [...countryData]; // Initialize filteredData with all countries
+      fillData(filteredData);
     });
 }
 
 function getFilteredCountries(regions) {
-  const filteredData = countryData.filter(country => {
+  const filteredData = countryData.filter((country) => {
     return regions.includes(country.region);
   });
 
@@ -58,7 +60,7 @@ function getFilteredCountries(regions) {
 }
 
 function searchCountry(keyword, data) {
-  const filteredData = data.filter(country => {
+  const filteredData = data.filter((country) => {
     return country.name.common.toLowerCase().includes(keyword.toLowerCase());
   });
 
@@ -101,19 +103,35 @@ function sortDataByPopulation(order, data) {
   return sortedData;
 }
 
+function showCountryDetails(country) {
+  const modalTitle = document.getElementById("countryModalTitle");
+  const countryFlag = document.getElementById("countryFlag");
+  const countryCapital = document.getElementById("countryCapital");
+  const countryPopulation = document.getElementById("countryPopulation");
+
+  modalTitle.textContent = country.name.common;
+  countryFlag.src = country.flags.png;
+  countryCapital.textContent = country.capital || "N/A";
+  countryPopulation.textContent = formatPopulation(country.population);
+  countryPopulation.style.color = "rgb(200, 0, 0)";
+
+  // Show the modal
+  const countryModal = new bootstrap.Modal(document.getElementById("countryModal"));
+  countryModal.show();
+}
+
 // Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
   const regionCheckboxes = document.querySelectorAll(".region-checkbox");
   const searchTxt = document.getElementById("searchTxt");
   const sortCheckboxes = document.querySelectorAll(".sort-checkbox");
 
-  regionCheckboxes.forEach(checkbox => {
+  regionCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
       const selectedRegions = Array.from(regionCheckboxes)
-        .filter(checkbox => checkbox.checked)
-        .map(checkbox => checkbox.value);
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.value);
 
-      let filteredData = [];
       if (selectedRegions.length > 0) {
         filteredData = getFilteredCountries(selectedRegions);
       } else {
@@ -121,40 +139,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const keyword = searchTxt.value.trim();
-      let searchData = [];
       if (keyword !== "") {
-        searchData = searchCountry(keyword, filteredData);
-      } else {
-        searchData = [...filteredData];
+        filteredData = searchCountry(keyword, filteredData);
       }
 
-      let sortedData = [...searchData];
-      const checkedSortCheckbox = Array.from(sortCheckboxes)
-        .find(checkbox => checkbox.checked);
-
+      const checkedSortCheckbox = Array.from(sortCheckboxes).find((checkbox) => checkbox.checked);
       if (checkedSortCheckbox) {
         const sortValue = checkedSortCheckbox.value;
         if (sortValue === "name") {
-          sortedData = sortDataByName("asc", searchData);
+          filteredData = sortDataByName("asc", filteredData);
         } else if (sortValue === "population-asc") {
-          sortedData = sortDataByPopulation("asc", searchData);
+          filteredData = sortDataByPopulation("asc", filteredData);
         } else if (sortValue === "population-desc") {
-          sortedData = sortDataByPopulation("desc", searchData);
+          filteredData = sortDataByPopulation("desc", filteredData);
         }
       }
 
       clearData(); // Clear previously fetched data
-      fillData(sortedData);
+      fillData(filteredData);
     });
   });
 
   searchTxt.addEventListener("input", () => {
     const keyword = searchTxt.value.trim();
-    let filteredData = [];
     if (regionCheckboxes.length > 0) {
       const selectedRegions = Array.from(regionCheckboxes)
-        .filter(checkbox => checkbox.checked)
-        .map(checkbox => checkbox.value);
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.value);
 
       if (selectedRegions.length > 0) {
         filteredData = getFilteredCountries(selectedRegions);
@@ -165,40 +176,33 @@ document.addEventListener("DOMContentLoaded", () => {
       filteredData = [...countryData];
     }
 
-    let searchData = [];
     if (keyword !== "") {
-      searchData = searchCountry(keyword, filteredData);
-    } else {
-      searchData = [...filteredData];
+      filteredData = searchCountry(keyword, filteredData);
     }
 
-    let sortedData = [...searchData];
-    const checkedSortCheckbox = Array.from(sortCheckboxes)
-      .find(checkbox => checkbox.checked);
-
+    const checkedSortCheckbox = Array.from(sortCheckboxes).find((checkbox) => checkbox.checked);
     if (checkedSortCheckbox) {
       const sortValue = checkedSortCheckbox.value;
       if (sortValue === "name") {
-        sortedData = sortDataByName("asc", searchData);
+        filteredData = sortDataByName("asc", filteredData);
       } else if (sortValue === "population-asc") {
-        sortedData = sortDataByPopulation("asc", searchData);
+        filteredData = sortDataByPopulation("asc", filteredData);
       } else if (sortValue === "population-desc") {
-        sortedData = sortDataByPopulation("desc", searchData);
+        filteredData = sortDataByPopulation("desc", filteredData);
       }
     }
 
     clearData(); // Clear previously fetched data
-    fillData(sortedData);
+    fillData(filteredData);
   });
 
-  sortCheckboxes.forEach(checkbox => {
+  sortCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
-      const checkedSortCheckboxes = Array.from(sortCheckboxes)
-        .filter(checkbox => checkbox.checked);
+      const checkedSortCheckboxes = Array.from(sortCheckboxes).filter((checkbox) => checkbox.checked);
 
       if (checkedSortCheckboxes.length > 1) {
         // Uncheck all other sort checkboxes
-        sortCheckboxes.forEach(checkbox => {
+        sortCheckboxes.forEach((checkbox) => {
           if (checkbox !== checkedSortCheckboxes[0]) {
             checkbox.checked = false;
           }
@@ -206,11 +210,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const keyword = searchTxt.value.trim();
-      let filteredData = [];
       if (regionCheckboxes.length > 0) {
         const selectedRegions = Array.from(regionCheckboxes)
-          .filter(checkbox => checkbox.checked)
-          .map(checkbox => checkbox.value);
+          .filter((checkbox) => checkbox.checked)
+          .map((checkbox) => checkbox.value);
 
         if (selectedRegions.length > 0) {
           filteredData = getFilteredCountries(selectedRegions);
@@ -221,38 +224,40 @@ document.addEventListener("DOMContentLoaded", () => {
         filteredData = [...countryData];
       }
 
-      let searchData = [];
       if (keyword !== "") {
-        searchData = searchCountry(keyword, filteredData);
-      } else {
-        searchData = [...filteredData];
+        filteredData = searchCountry(keyword, filteredData);
       }
 
-      let sortedData = [...searchData];
-      const checkedSortCheckbox = Array.from(sortCheckboxes)
-        .find(checkbox => checkbox.checked);
-
-      if (checkedSortCheckbox) {
-        const sortValue = checkedSortCheckbox.value;
+      if (checkedSortCheckboxes.length > 0) {
+        const sortValue = checkedSortCheckboxes[0].value;
         if (sortValue === "name") {
-          sortedData = sortDataByName("asc", searchData);
+          filteredData = sortDataByName("asc", filteredData);
         } else if (sortValue === "population-asc") {
-          sortedData = sortDataByPopulation("asc", searchData);
+          filteredData = sortDataByPopulation("asc", filteredData);
         } else if (sortValue === "population-desc") {
-          sortedData = sortDataByPopulation("desc", searchData);
+          filteredData = sortDataByPopulation("desc", filteredData);
         }
       }
 
       clearData(); // Clear previously fetched data
-      fillData(sortedData);
+      fillData(filteredData);
     });
   });
 
+  // Event listener for country selection (when a row is clicked)
+  const tableBody = document.getElementById("tBody");
+  tableBody.addEventListener("click", (event) => {
+    const selectedCountryIndex = event.target.closest("tr").rowIndex - 1;
+    const selectedCountry = filteredData[selectedCountryIndex];
+
+    if (selectedCountry) {
+      showCountryDetails(selectedCountry);
+    }
+  });
 });
 
 // Initialization
 getCountries(); // Fetch all countries when the page is loaded
-
 
 
 

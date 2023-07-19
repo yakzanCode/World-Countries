@@ -1,3 +1,31 @@
+/* ... Your other CSS styles ... */
+
+/* Adjust modal styles */
+.modal-dialog {
+    max-width: 400px; /* Adjust the modal width as needed */
+  }
+  
+  .modal-body {
+    font-size: 16px;
+  }
+  
+  .modal-footer {
+    justify-content: flex-start; /* Left-align the modal footer buttons */
+  }
+  
+  /* Center the modal title */
+  .modal-title {
+    text-align: center;
+  }
+  
+  /* Optional: Add some margin to the modal content */
+  .modal-content {
+    margin: 20px;
+  }
+  
+  /* ... Your other CSS styles ... */
+  
+
 .flags-column {
     width: 60px;
 }
