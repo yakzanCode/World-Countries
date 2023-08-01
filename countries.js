@@ -1,8 +1,7 @@
-// Global Variables
-let countryData = []; // Store the fetched country data
-let filteredData = []; // Store the filtered country data
+let countryData = []; 
+let filteredData = []; 
 
-// Functions
+
 function clearData() {
   const tbody = document.getElementById("tBody");
   tbody.innerHTML = "";
@@ -21,22 +20,16 @@ function fillData(data) {
     const TD3 = document.createElement("td");
     const TD4 = document.createElement("td");
 
-    const cImg = document.createElement("img");
+    const cImg = new Image();
     cImg.src = country.flags.png;
     TD1.appendChild(cImg);
-    TD2.innerHTML = country.name.common;
-    TD3.innerHTML = country.capital || "N/A";
-    TD4.innerHTML = formatPopulation(country.population);
+    TD2.textContent = country.name.common;
+    TD3.textContent = country.capital || "N/A";
+    TD4.textContent = formatPopulation(country.population);
     TD4.style.color = "rgb(200, 0, 0)";
 
-    if (index % 2 === 0) {
-      TD1.style.backgroundColor = "rgb(211, 211, 211)";
-      TD2.style.backgroundColor = "rgb(211, 211, 211)";
-      TD3.style.backgroundColor = "rgb(211, 211, 211)";
-      TD4.style.backgroundColor = "rgb(211, 211, 211)";
-    }
-
     TR.append(TD1, TD2, TD3, TD4);
+
     tbody.appendChild(TR);
   });
 }
@@ -45,8 +38,8 @@ function getCountries() {
   fetch("https://restcountries.com/v3.1/all")
     .then((response) => response.json())
     .then((json) => {
-      countryData = json; // Save the fetched country data
-      filteredData = [...countryData]; // Initialize filteredData with all countries
+      countryData = json; 
+      filteredData = [...countryData]; 
       fillData(filteredData);
     });
 }
@@ -115,16 +108,17 @@ function showCountryDetails(country) {
   countryPopulation.textContent = formatPopulation(country.population);
   countryPopulation.style.color = "rgb(200, 0, 0)";
 
-  // Show the modal
+
   const countryModal = new bootstrap.Modal(document.getElementById("countryModal"));
   countryModal.show();
 }
 
-// Event Listeners
+
 document.addEventListener("DOMContentLoaded", () => {
   const regionCheckboxes = document.querySelectorAll(".region-checkbox");
   const searchTxt = document.getElementById("searchTxt");
   const sortCheckboxes = document.querySelectorAll(".sort-checkbox");
+  const darkModeToggle = document.getElementById("darkModeToggle");
 
   regionCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
@@ -155,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      clearData(); // Clear previously fetched data
+      clearData();
       fillData(filteredData);
     });
   });
@@ -192,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    clearData(); // Clear previously fetched data
+    clearData();
     fillData(filteredData);
   });
 
@@ -201,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const checkedSortCheckboxes = Array.from(sortCheckboxes).filter((checkbox) => checkbox.checked);
 
       if (checkedSortCheckboxes.length > 1) {
-        // Uncheck all other sort checkboxes
+
         sortCheckboxes.forEach((checkbox) => {
           if (checkbox !== checkedSortCheckboxes[0]) {
             checkbox.checked = false;
@@ -239,12 +233,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      clearData(); // Clear previously fetched data
+      clearData(); 
       fillData(filteredData);
     });
   });
 
-  // Event listener for country selection (when a row is clicked)
+
+  darkModeToggle.addEventListener("change", () => {
+    const isDarkModeEnabled = darkModeToggle.checked;
+
+    if (isDarkModeEnabled) {
+      document.body.classList.add("dark-mode");
+      fillData(filteredData); 
+    } else {
+      document.body.classList.remove("dark-mode");
+      fillData(filteredData); 
+    }
+  });
+
+
   const tableBody = document.getElementById("tBody");
   tableBody.addEventListener("click", (event) => {
     const selectedCountryIndex = event.target.closest("tr").rowIndex - 1;
@@ -256,99 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Initialization
-getCountries(); // Fetch all countries when the page is loaded
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-// function getCountries() {
-//   fetch('https://restcountries.com/v3.1/all')
-//     .then(response => response.json())
-//     .then(json => fillData(json))
-//   .then(json => {
-//     fillData(json)
-//     isFirstCall = true;
-//   })
-// }
-
-// function getFilteredCountries(region) {
-//   fetch(`https://restcountries.com/v3.1/region/${region}`)
-//     .then(response => response.json())
-//     .then(json => {
-//       fillData(json);
-//       isFirstCall = false;
-//     })
-// }
-
-// const regionsList = document.querySelectorAll(".reg");
-// const countriesLink = document.querySelector(".countries-link");
-
-
-// regionsList.forEach(R => {
-//   R.addEventListener("click", () => {
-//     const selectedRegion = R.textContent;
-//     clearData();
-//     getFilteredCountries(selectedRegion);
-//   })
-// });
-
-// countriesLink.addEventListener("click", () => {
-//   clearData();
-//   getCountries();
-// });
-
-
-// const isFirstCall = false;
-
-// function clearData() {
-//   const tbody = document.getElementById("tBody");
-//   while (tbody.firstChild) {
-//     tbody.removeChild(tbody.firstChild);
-//   }
-// }
-
-// function fillData(json) {
-//   json.forEach((country, index) => {
-//     const TBODY = document.getElementById("tBody");
-//     const TR = document.createElement("tr");
-//     const TD1 = document.createElement("td");
-//     const TD2 = document.createElement("td");
-//     const TD3 = document.createElement("td");
-//     const TD4 = document.createElement("td");
-
-
-//     const cImg = document.createElement('img');
-//     cImg.src = country.flags.png;
-//     TD1.appendChild(cImg);
-//     TD2.innerHTML = country.name.common;
-//     TD3.innerHTML = country.capital;
-//     TD4.innerHTML = country.population;
-//     TD4.style.color = "rgb(200,0,0)";
-
-//     if (index % 2 === 0) {
-//       TD1.style.backgroundColor = "rgb(211,211,211)"
-//       TD2.style.backgroundColor = "rgb(211,211,211)"
-//       TD3.style.backgroundColor = "rgb(211,211,211)"
-//       TD4.style.backgroundColor = "rgb(211,211,211)"
-//     }
-
-//     TR.append(TD1, TD2, TD3, TD4);
-//     TBODY.appendChild(TR);
-//   })
-// }
-
-// document.addEventListener("DOMContentLoaded", () => {
-//   getCountries();
-// });
+getCountries(); 

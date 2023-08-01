@@ -1,5 +1,13 @@
 /* ... Your other CSS styles ... */
 
+body table tbody tr:nth-child(odd) td {
+    background-color: rgb(211, 211, 211);
+  }
+
+.dark-mode table tbody tr:nth-child(even) td {
+    background-color: rgb(52, 52, 52);
+    color: rgb(211, 211, 211);
+  }
 /* Adjust modal styles */
 .modal-dialog {
     max-width: 400px; /* Adjust the modal width as needed */
@@ -30,20 +38,21 @@
     width: 60px;
 }
 
-.table {
+table {
     table-layout: fixed;
     margin-top: 20px;
 }
 
-.table thead th {
+table thead th {
     max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.table tbody td {
+table tbody tr td {
     word-break: break-word;
+    background-color: aquamarine;
 }
 
 td>img {
@@ -85,3 +94,8 @@ td>img {
 .sort-section {
     margin-top: 20px;
 }
+
+/* .even-row {
+    background-color: #000000;
+  } */
+
